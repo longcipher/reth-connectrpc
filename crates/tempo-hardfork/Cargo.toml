@@ -1,0 +1,30 @@
+[package]
+name = "tempo-hardfork"
+description = "Tempo hardfork identifiers and activation schedules"
+
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[package.metadata.cargo-shear]
+ignored = ["proptest"]
+
+[features]
+default = ["std", "serde"]
+std = ["alloy-eips/std", "serde?/std"]
+serde = ["dep:serde", "alloy-eips/serde", "alloy-hardforks/serde"]
+evm = ["dep:alloy-evm"]
+
+[dependencies]
+alloy-eips = { workspace = true }
+alloy-evm = { workspace = true, optional = true }
+alloy-hardforks = { workspace = true }
+paste = { workspace = true }
+serde = { workspace = true, optional = true }
+
+[dev-dependencies]
+proptest = { workspace = true }
+serde_json = { workspace = true }
+
+[lints]
+workspace = true

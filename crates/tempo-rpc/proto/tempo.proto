@@ -1,0 +1,90 @@
+syntax = "proto3";
+
+package exex.tempo.v1;
+
+// BlockStream service provides block streaming over ConnectRPC
+service BlockStream {
+  // Live streams new blocks from the chain tip
+  rpc Live(LiveRequest) returns (stream BlockStreamResponse);
+  // Backfill streams historical blocks from start to end
+  rpc Backfill(BackfillRequest) returns (stream BlockStreamResponse);
+  // BackfillToLive streams historical blocks then transitions to live
+  rpc BackfillToLive(BackfillToLiveRequest) returns (stream BlockStreamResponse);
+}
+
+message LiveRequest {}
+
+message BackfillRequest {
+  uint64 start_block = 1;
+  uint64 end_block = 2;
+}
+
+message BackfillToLiveRequest {
+  uint64 start_block = 1;
+}
+
+message BlockStreamResponse {
+  Block block = 1;
+}
+
+message Block {
+  uint64 number = 1;
+  bytes hash = 2;
+  Header header = 3;
+  repeated TransactionEnvelope transactions = 4;
+  repeated TransactionReceipt transaction_receipts = 5;
+  repeated Log logs = 6;
+}
+
+message PublicKey {
+  bytes bytes = 1;
+}
+
+message TempoConsensusContext {
+  uint64 epoch = 1;
+  uint64 view = 2;
+  uint64 parent_view = 3;
+  PublicKey proposer = 4;
+}
+
+message Header {
+  uint64 general_gas_limit = 1;
+  uint64 shared_gas_limit = 2;
+  uint64 timestamp_millis_part = 3;
+  bytes parent_hash = 4;
+  bytes ommers_hash = 5;
+  bytes beneficiary = 6;
+  bytes state_root = 7;
+  bytes transactions_root = 8;
+  bytes receipts_root = 9;
+  bytes logs_bloom = 10;
+  bytes difficulty = 11;
+  uint64 gas_limit = 12;
+  uint64 gas_used = 13;
+  uint64 timestamp = 14;
+  bytes extra_data = 15;
+  bytes mix_hash = 16;
+  bytes nonce = 17;
+  optional uint64 base_fee_per_gas = 18;
+  optional uint64 blob_gas_used = 19;
+  optional uint64 excess_blob_gas = 20;
+  optional bytes parent_beacon_block_root = 21;
+  optional bytes requests_hash = 22;
+  optional bytes withdrawals_root = 23;
+  optional TempoConsensusContext consensus_context = 24;
+}
+
+message TransactionEnvelope {
+  bytes rlp = 1;
+}
+
+message TransactionReceipt {
+  bytes rlp = 1;
+}
+
+message Log {
+  bytes address = 1;
+  repeated bytes topics = 2;
+  bytes data = 3;
+  bool removed = 4;
+}

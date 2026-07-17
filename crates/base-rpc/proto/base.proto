@@ -1,0 +1,75 @@
+syntax = "proto3";
+
+package exex.base.v1;
+
+// BlockStream service provides block streaming over ConnectRPC
+service BlockStream {
+  // Live streams new blocks from the chain tip
+  rpc Live(LiveRequest) returns (stream BlockStreamResponse);
+  // Backfill streams historical blocks from start to end
+  rpc Backfill(BackfillRequest) returns (stream BlockStreamResponse);
+  // BackfillToLive streams historical blocks then transitions to live
+  rpc BackfillToLive(BackfillToLiveRequest) returns (stream BlockStreamResponse);
+}
+
+message LiveRequest {}
+
+message BackfillRequest {
+  uint64 start_block = 1;
+  uint64 end_block = 2;
+}
+
+message BackfillToLiveRequest {
+  uint64 start_block = 1;
+}
+
+message BlockStreamResponse {
+  Block block = 1;
+}
+
+message Block {
+  uint64 number = 1;
+  bytes hash = 2;
+  Header header = 3;
+  repeated TransactionEnvelope transactions = 4;
+  repeated TransactionReceipt transaction_receipts = 5;
+  repeated Log logs = 6;
+}
+
+message Header {
+  bytes parent_hash = 1;
+  bytes ommers_hash = 2;
+  bytes beneficiary = 3;
+  bytes state_root = 4;
+  bytes transactions_root = 5;
+  bytes receipts_root = 6;
+  bytes logs_bloom = 7;
+  bytes difficulty = 8;
+  uint64 gas_limit = 9;
+  uint64 gas_used = 10;
+  uint64 timestamp = 11;
+  bytes extra_data = 12;
+  bytes mix_hash = 13;
+  bytes nonce = 14;
+  optional uint64 base_fee_per_gas = 15;
+  optional uint64 blob_gas_used = 16;
+  optional uint64 excess_blob_gas = 17;
+  optional bytes parent_beacon_block_root = 18;
+  optional bytes requests_hash = 19;
+  optional bytes withdrawals_root = 20;
+}
+
+message TransactionEnvelope {
+  bytes rlp = 1;
+}
+
+message TransactionReceipt {
+  bytes rlp = 1;
+}
+
+message Log {
+  bytes address = 1;
+  repeated bytes topics = 2;
+  bytes data = 3;
+  bool removed = 4;
+}
