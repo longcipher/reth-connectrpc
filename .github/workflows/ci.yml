@@ -22,6 +22,9 @@ jobs:
         with:
           components: rustfmt, clippy
 
+      - name: Install protobuf
+        run: sudo apt-get update && sudo apt-get install -y protobuf-compiler
+
       - uses: taiki-e/install-action@v2
         with:
           tool: just,cargo-machete,typos-cli,rumdl
