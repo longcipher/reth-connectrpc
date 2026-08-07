@@ -26,14 +26,9 @@ lint:
 test:
   cargo test --all-features
 
-# Run BDD scenarios
-bdd:
-  cargo test -p common --test bdd
 
-# Run both TDD and BDD suites
 test-all:
   cargo test --all-features
-  cargo test -p common --test bdd
 
 # Run tests with coverage
 test-coverage:

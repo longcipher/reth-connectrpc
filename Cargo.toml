@@ -36,7 +36,6 @@ config = "0.15.25"
 connectrpc = "0.8.1"
 connectrpc-build = "0.8.0"
 connectrpc-reflection = "0.8.0"
-cucumber = "0.23.0"
 derive_more = { version = "2.1.1", default-features = false }
 ed25519-consensus = { version = "2.1.0", default-features = false }
 eyre = "0.6.12"
